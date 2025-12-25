@@ -13,7 +13,8 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:5175',
   'https://studywithmaryam.online',
-  'https://www.studywithmaryam.online'
+  'https://www.studywithmaryam.online',
+  'https://study-frontend-two.vercel.app'
 ];
 
 app.use(cors({
