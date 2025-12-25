@@ -6,41 +6,22 @@ require('dotenv').config();
 
 const app = express();
 
-// Middleware
-const allowedOrigins = [
-  'http://localhost:5173',
-  'http://localhost:5174', 
-  'http://localhost:3000',
-  'http://localhost:5175',
-  'https://studywithmaryam.online',
-  'https://www.studywithmaryam.online',
-  'https://study-frontend-two.vercel.app'
-];
-
-const corsOptions = {
-  origin: function (origin, callback) {
-    console.log('CORS request from origin:', origin);
-    // Allow requests with no origin (mobile apps, curl, etc.)
-    if (!origin) return callback(null, true);
-    
-    if (allowedOrigins.indexOf(origin) !== -1) {
-      console.log('CORS allowed for origin:', origin);
-      callback(null, true);
-    } else {
-      const msg = `CORS blocked: ${origin} not in allowed list`;
-      console.error(msg);
-      callback(null, false);
-    }
-  },
+// Middleware - Simplified CORS
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'http://localhost:5174', 
+    'http://localhost:3000',
+    'http://localhost:5175',
+    'https://studywithmaryam.online',
+    'https://www.studywithmaryam.online',
+    'https://study-frontend-two.vercel.app'
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-  exposedHeaders: ['Content-Range', 'X-Content-Range'],
-  maxAge: 86400 // 24 hours
-};
-
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions));
+  optionsSuccessStatus: 200
+}));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
