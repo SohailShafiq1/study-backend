@@ -4,6 +4,15 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
+// Catch uncaught exceptions
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+});
+
 console.log('Starting server...');
 console.log('Node version:', process.version);
 console.log('PORT env:', process.env.PORT);
@@ -76,13 +85,19 @@ mongoose.connect(mongoUri)
   console.error('Server will continue but database operations will fail');
 });
 
-// Routes
-app.use('/api/classes', require('./routes/classes'));
-app.use('/api/subjects', require('./routes/subjects'));
-app.use('/api/chapters', require('./routes/chapters'));
-app.use('/api/notes', require('./routes/notes'));
-app.use('/api/entrance-exams', require('./routes/entranceExams'));
-app.use('/api/document-types', require('./routes/documentTypes'));
+// Routes - wrapped in try-catch
+try {
+  console.log('Loading routes...');
+  app.use('/api/classes', require('./routes/classes'));
+  app.use('/api/subjects', require('./routes/subjects'));
+  app.use('/api/chapters', require('./routes/chapters'));
+  app.use('/api/notes', require('./routes/notes'));
+  app.use('/api/entrance-exams', require('./routes/entranceExams'));
+  app.use('/api/document-types', require('./routes/documentTypes'));
+  console.log('Routes loaded successfully');
+} catch (err) {
+  console.error('Failed to load routes:', err);
+}
 
 // 404 handler
 app.use((req, res) => {
