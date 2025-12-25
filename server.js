@@ -14,19 +14,21 @@ const allowedOrigins = [
   'http://localhost:5175',
   'https://studywithmaryam.online',
   'https://www.studywithmaryam.online',
-  'https://study-frontend-two.vercel.app',
   'https://study-frontend-two.vercel.app'
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
+    console.log('CORS request from origin:', origin);
     // Allow requests with no origin (mobile apps, curl, etc.)
     if (!origin) return callback(null, true);
     
     if (allowedOrigins.indexOf(origin) === -1) {
-      const msg = 'The CORS policy for this site does not allow access from the specified origin.';
+      const msg = `CORS blocked: ${origin} not in allowed list`;
+      console.error(msg);
       return callback(new Error(msg), false);
     }
+    console.log('CORS allowed for origin:', origin);
     return callback(null, true);
   },
   credentials: true,
