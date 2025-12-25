@@ -4,6 +4,10 @@ const cors = require('cors');
 const path = require('path');
 require('dotenv').config();
 
+console.log('Starting server...');
+console.log('Node version:', process.version);
+console.log('PORT env:', process.env.PORT);
+
 const app = express();
 
 // Middleware - Simplified CORS
@@ -98,8 +102,11 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
+}).on('error', (err) => {
+  console.error('Failed to start server:', err);
+  process.exit(1);
 });
