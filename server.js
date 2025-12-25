@@ -51,7 +51,9 @@ app.get('/health', (req, res) => {
     status: 'OK', 
     message: 'Server is running',
     timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development'
+    environment: process.env.NODE_ENV || 'development',
+    mongoConnected: mongoose.connection.readyState === 1,
+    mongoUri: process.env.MONGODB_URI ? 'Set' : 'Not Set'
   });
 });
 
@@ -73,9 +75,18 @@ app.get('/', (req, res) => {
 });
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/study-with-maryam')
-.then(() => console.log('MongoDB connected'))
-.catch(err => console.error('MongoDB connection error:', err));
+const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/study-with-maryam';
+console.log('Attempting MongoDB connection...');
+console.log('MongoDB URI present:', mongoUri ? 'Yes' : 'No');
+
+mongoose.connect(mongoUri)
+.then(() => {
+  console.log('✅ MongoDB connected successfully');
+})
+.catch(err => {
+  console.error('❌ MongoDB connection error:', err.message);
+  console.error('Server will continue but database operations will fail');
+});
 
 // Routes
 app.use('/api/classes', require('./routes/classes'));
