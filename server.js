@@ -14,6 +14,7 @@ const allowedOrigins = [
   'http://localhost:5175',
   'https://studywithmaryam.online',
   'https://www.studywithmaryam.online',
+  'https://study-frontend-two.vercel.app',
   'https://study-frontend-two.vercel.app'
 ];
 
